@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start 'rails'
+
 Given /the following movies exist/ do |movie_table|
   movie_table.hashes.each do |movie|
   m = Movie.create!(movie)
