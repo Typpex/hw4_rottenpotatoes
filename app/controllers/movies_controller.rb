@@ -7,6 +7,9 @@ class MoviesController < ApplicationController
   end
   
   def same_director
+    if params[:director].empty?
+      redirect_to root_path
+    end
       @movies = Movie.find_all_by_director (params[:director])
       @director = params[:director]
   end

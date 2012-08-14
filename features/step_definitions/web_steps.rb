@@ -123,10 +123,16 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    page.should have_content(text)
+  capture = text.scan(/(.*) has no director info/)
+  if capture.count >= 1
+    title = capture[0][0]
+    
   else
-    assert page.has_content?(text)
+    if page.respond_to? :should
+      page.should have_content(text)
+    else
+      assert page.has_content?(text)
+    end
   end
 end
 
@@ -247,11 +253,11 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
   end
 end
  
-Then /^(?:|I )should be on the (.+)$/ do |page_name|
-  capture = page_name.scan(/the Similar Movies for (.*)/)
+Then /^(?:|I )should be on (.+)$/ do |page_name|
+  capture = page_name.scan(/Similar Movies page for (.*)$/)
   if capture.count >= 1
-    capture = capture[0].gsub('"','')
-    debugger
+    movie_title = capture[0][0]
+    assert_equal URI.parse(current_url).path, same_director_movies_path
   else
     current_path = URI.parse(current_url).path
     if current_path.respond_to? :should
